@@ -1,10 +1,10 @@
 import { Board, Move, Block, Cell } from './type';
 
 const isConnectedBlank = (cells: Board['blanks']): boolean =>
-  cells[0].upper().equals(cells[1]) ||
-  cells[0].downer().equals(cells[1]) ||
-  cells[0].right().equals(cells[1]) ||
-  cells[0].left().equals(cells[1]);
+  ancher.upper().equals(cells[1]) ||
+  ancher.downer().equals(cells[1]) ||
+  ancher.right().equals(cells[1]) ||
+  ancher.left().equals(cells[1]);
 
 const calculatePossibleMoves = (board: Board): Move[] => {
   let moves: Move[];
@@ -27,28 +27,28 @@ const calculatePossibleMoves = (board: Board): Move[] => {
         switch (block.type) {
           case 'dot':
             //vertival
-            if (dot_upper_ancher.equals(block.cells[0]))
+            if (dot_upper_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.DOWN });
-            if (dot_downer_ancher.equals(block.cells[0]))
+            if (dot_downer_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.UP });
             //horizontal
-            if (dot_right_ancher.equals(block.cells[0]))
+            if (dot_right_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.LEFT });
-            if (dot_left_ancher.equals(block.cells[0]))
+            if (dot_left_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.RIGHT });
             break;
           case 'vertical':
             //vertival
-            if (vertical_upper_ancher.equals(block.cells[0]))
+            if (vertical_upper_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.DOWN });
-            if (vertical_downer_ancher.equals(block.cells[0]))
+            if (vertical_downer_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.UP });
             break;
           case 'horizontal':
             //horizontal
-            if (horizontal_right_ancher.equals(block.cells[0]))
+            if (horizontal_right_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.LEFT });
-            if (horizontal_left_ancher.equals(block.cells[0]))
+            if (horizontal_left_ancher.equals(block.ancher))
               moves.push({ block_index: i, direction: Cell.RIGHT });
             break;
           default:

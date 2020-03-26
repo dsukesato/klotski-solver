@@ -41,28 +41,146 @@ export class Cell {
 //blocks
 export type BlockDot = {
   type: 'dot';
-  cells: [Cell];
+  ancher: Cell;
 };
 export type BlockHorizontal = {
   type: 'horizontal';
-  cells: [Cell, Cell];
+  ancher: Cell;
 };
 export type BlockVertical = {
   type: 'vertical';
-  cells: [Cell, Cell];
+  ancher: Cell;
 };
 export type BlockTarget = {
   type: 'target';
-  cells: [Cell, Cell, Cell, Cell];
+  ancher: Cell;
 };
 
 export type Block = BlockDot | BlockHorizontal | BlockVertical | BlockTarget;
 
-export type Board = { blocks: Block[]; blanks: [Cell, Cell] };
-
 // Move's direction is ancher's coordinate after movement
 type Vector = Cell;
 export type Move = {
-  block_index: number;
+  ancher: Cell;
   direction: Vector;
 };
+
+class Board {
+  static WIDTH: number = 4;
+  static HEIGHT: number = 5;
+  //board[y][x]
+  board: Block[][];
+  blocks: Block[];
+  blanks: [Cell, Cell];
+
+  constructor(blocks: Block[]) {
+    this.blocks = blocks;
+
+    this.board = [];
+    for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
+    blocks.forEach(block => {
+      this.board[block.ancher.y][block.ancher.x] = block;
+    });
+  }
+
+  isValidCell(cell: Cell): boolean {
+    return (
+      cell.x >= 0 &&
+      cell.x < Board.WIDTH &&
+      cell.y >= 0 &&
+      cell.y < Board.HEIGHT
+    );
+  }
+
+  getBlock(cell: Cell): Block | null {
+    try {
+      return this.board[cell.y][cell.x];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  getBlankIndex(cell: Cell): number {
+    return this.blanks.findIndex(x => cell.equals(x));
+  }
+
+  moveBlock(move: Move): void {
+    //alias vars
+    const ancher = move.ancher;
+    const block = this.getBlock(ancher);
+
+    //move blanks
+    switch (block.type) {
+      case 'dot':
+        const target_blank_index = this.getBlankIndex(
+          ancher.add(move.direction)
+        );
+        this.blanks[target_blank_index] = ancher;
+        break;
+      case 'horizontal':
+        if (move.direction.x === -1) {
+          //left
+          const target_blank_index = this.getBlankIndex(ancher.left());
+          this.blanks[target_blank_index] = ancher.right();
+        } else if (move.direction.x === 1) {
+          //right
+          const target_blank_index = this.getBlankIndex(ancher.right(2));
+          this.blanks[target_blank_index] = ancher;
+        } else {
+          //up
+          //down
+          this.blanks[0] = ancher;
+          this.blanks[1] = this.blanks[0].right();
+        }
+        break;
+      case 'vertical':
+        if (move.direction.y === -1) {
+          //up
+          const target_blank_index = this.getBlankIndex(ancher.upper());
+          this.blanks[target_blank_index] = ancher.downer();
+        } else if (move.direction.y === 1) {
+          //down
+          const target_blank_index = this.getBlankIndex(ancher.downer(2));
+          this.blanks[target_blank_index] = ancher;
+        } else if (move.direction.x === -1) {
+          //left
+          this.blanks[0] = ancher;
+          this.blanks[1] = this.blanks[0].downer();
+        } else if (move.direction.x === 1) {
+          //right
+          this.blanks[0] = ancher;
+          this.blanks[1] = this.blanks[0].downer();
+        }
+        break;
+      case 'target':
+        if (move.direction.y === -1) {
+          //up
+          this.blanks[0] = ancher.downer();
+          this.blanks[1] = this.blanks[0].right();
+        } else if (move.direction.y === 1) {
+          //down
+          this.blanks[0] = ancher;
+          this.blanks[1] = this.blanks[0].right();
+        } else if (move.direction.x === -1) {
+          //left
+          this.blanks[0] = ancher.right();
+          this.blanks[1] = this.blanks[0].downer();
+        } else if (move.direction.x === 1) {
+          //right
+          this.blanks[0] = ancher;
+          this.blanks[1] = this.blanks[0].downer();
+        }
+        break;
+    }
+
+    //move block
+    const dest_ancher = ancher.add(move.direction);
+    this.board[ancher.y][ancher.x] = undefined;
+    this.board[dest_ancher.y][dest_ancher.x] = block;
+    block.ancher = dest_ancher;
+  }
+
+  forEachBlock(callback: (block: Block) => void) {
+    this.blocks.forEach(callback);
+  }
+}
