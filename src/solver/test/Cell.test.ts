@@ -40,8 +40,8 @@ describe('Cell', () => {
     const cell3 = cell1.scalar_mul(2);
     const cell4 = cell1.upper();
 
-    expect(cell1).not.toBe(cell2);
-    expect(cell1).not.toBe(cell3);
-    expect(cell1).not.toBe(cell4);
+    expect(Object.is(cell1, cell2)).not.toBe(true);
+    expect(Object.is(cell1, cell3)).not.toBe(true);
+    expect(Object.is(cell1, cell4)).not.toBe(true);
   });
 });
