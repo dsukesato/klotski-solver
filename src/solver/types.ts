@@ -58,22 +58,22 @@ export type BlockTarget = {
 
 export type Block = BlockDot | BlockHorizontal | BlockVertical | BlockTarget;
 
-// Move's direction is ancher's coordinate after movement
 type Vector = Cell;
 export type Move = {
   ancher: Cell;
   direction: Vector;
 };
 
-class Board {
+export type Blanks = [Cell, Cell];
+export class Board {
   static WIDTH: number = 4;
   static HEIGHT: number = 5;
   //board[y][x]
   board: Block[][];
   blocks: Block[];
-  blanks: [Cell, Cell];
+  blanks: Blanks;
 
-  constructor(blocks: Block[]) {
+  constructor({ blocks, blanks }: { blocks: Block[]; blanks: Blanks }) {
     this.blocks = blocks;
 
     this.board = [];
@@ -81,6 +81,8 @@ class Board {
     blocks.forEach(block => {
       this.board[block.ancher.y][block.ancher.x] = block;
     });
+
+    this.blanks = blanks;
   }
 
   isValidCell(cell: Cell): boolean {
