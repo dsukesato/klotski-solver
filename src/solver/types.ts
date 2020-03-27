@@ -4,8 +4,8 @@ export class Cell {
   static RIGHT: Cell = new Cell(-1, 0);
   static LEFT: Cell = new Cell(1, 0);
 
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 
   constructor(x: number, y: number) {
     this.x = x;
@@ -69,20 +69,39 @@ export class Board {
   static WIDTH: number = 4;
   static HEIGHT: number = 5;
   //board[y][x]
-  board: Block[][];
-  blocks: Block[];
-  blanks: Blanks;
+  readonly board: Block[][];
+  readonly blocks: Block[];
+  readonly blanks: Blanks;
 
-  constructor({ blocks, blanks }: { blocks: Block[]; blanks: Blanks }) {
+  constructor({
+    blocks,
+    blanks,
+    board,
+  }: {
+    blocks: Block[];
+    blanks: Blanks;
+    board?: Block[][];
+  }) {
     this.blocks = blocks;
-
-    this.board = [];
-    for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
-    blocks.forEach(block => {
-      this.board[block.ancher.y][block.ancher.x] = block;
-    });
-
     this.blanks = blanks;
+
+    if (board) {
+      this.board = board;
+    } else {
+      this.board = [];
+      for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
+      blocks.forEach(block => {
+        this.board[block.ancher.y][block.ancher.x] = block;
+      });
+    }
+  }
+
+  clone() {
+    return new Board({
+      blocks: this.blocks,
+      blanks: this.blanks,
+      board: this.board,
+    });
   }
 
   isValidCell(cell: Cell): boolean {
@@ -106,8 +125,14 @@ export class Board {
     return this.blanks.findIndex(x => cell.equals(x));
   }
 
-  moveBlock(move: Move): void {
-    //alias vars
+  moveBlock(move: Move): Board {
+    const new_board = this.clone();
+    new_board._bangMoveBlock(move);
+    return new_board;
+  }
+
+  //make bang changes to member
+  _bangMoveBlock(move: Move): void {
     const ancher = move.ancher;
     const block = this.getBlock(ancher);
 
