@@ -100,9 +100,9 @@ export class Board {
 
   clone() {
     return new Board({
-      blocks: this.blocks,
-      blanks: this.blanks,
-      board: this.board,
+      blocks: this.blocks.concat(),
+      blanks: this.blanks.concat() as BlanksType,
+      board: this.board.map(x => x.concat()),
     });
   }
 
