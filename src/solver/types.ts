@@ -1,8 +1,8 @@
 export class Cell {
   static UP: Cell = new Cell(0, -1);
   static DOWN: Cell = new Cell(0, 1);
-  static RIGHT: Cell = new Cell(-1, 0);
-  static LEFT: Cell = new Cell(1, 0);
+  static RIGHT: Cell = new Cell(1, 0);
+  static LEFT: Cell = new Cell(-1, 0);
 
   readonly x: number;
   readonly y: number;
@@ -64,23 +64,25 @@ export type Move = {
   direction: Vector;
 };
 
-export type Blanks = [Cell, Cell];
+type BoardType = (Block | undefined)[][];
+type BlanksType = [Cell, Cell];
+type BlocksType = Block[];
 export class Board {
   static WIDTH: number = 4;
   static HEIGHT: number = 5;
   //board[y][x]
-  readonly board: Block[][];
-  readonly blocks: Block[];
-  readonly blanks: Blanks;
+  readonly board: BoardType;
+  readonly blocks: BlocksType;
+  readonly blanks: BlanksType;
 
   constructor({
     blocks,
     blanks,
     board,
   }: {
-    blocks: Block[];
-    blanks: Blanks;
-    board?: Block[][];
+    blocks: BlocksType;
+    blanks: BlanksType;
+    board?: BoardType;
   }) {
     this.blocks = blocks;
     this.blanks = blanks;
@@ -113,12 +115,8 @@ export class Board {
     );
   }
 
-  getBlock(cell: Cell): Block | null {
-    try {
-      return this.board[cell.y][cell.x];
-    } catch (e) {
-      return null;
-    }
+  getBlock(cell: Cell): Block | undefined {
+    return this.board[cell.y][cell.x];
   }
 
   getBlankIndex(cell: Cell): number {
@@ -135,6 +133,7 @@ export class Board {
   _bangMoveBlock(move: Move): void {
     const ancher = move.ancher;
     const block = this.getBlock(ancher);
+    if (block === undefined) return;
 
     //move blanks
     switch (block.type) {
