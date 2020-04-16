@@ -1,11 +1,11 @@
 export class Cell {
   static UP: Cell = new Cell(0, -1);
   static DOWN: Cell = new Cell(0, 1);
-  static RIGHT: Cell = new Cell(-1, 0);
-  static LEFT: Cell = new Cell(1, 0);
+  static RIGHT: Cell = new Cell(1, 0);
+  static LEFT: Cell = new Cell(-1, 0);
 
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 
   constructor(x: number, y: number) {
     this.x = x;
@@ -58,28 +58,51 @@ export type BlockTarget = {
 
 export type Block = BlockDot | BlockHorizontal | BlockVertical | BlockTarget;
 
-// Move's direction is ancher's coordinate after movement
 type Vector = Cell;
 export type Move = {
   ancher: Cell;
   direction: Vector;
 };
 
-class Board {
+type BoardType = (Block | undefined)[][];
+type BlanksType = [Cell, Cell];
+type BlocksType = Block[];
+export class Board {
   static WIDTH: number = 4;
   static HEIGHT: number = 5;
   //board[y][x]
-  board: Block[][];
-  blocks: Block[];
-  blanks: [Cell, Cell];
+  readonly board: BoardType;
+  readonly blocks: BlocksType;
+  readonly blanks: BlanksType;
 
-  constructor(blocks: Block[]) {
+  constructor({
+    blocks,
+    blanks,
+    board,
+  }: {
+    blocks: BlocksType;
+    blanks: BlanksType;
+    board?: BoardType;
+  }) {
     this.blocks = blocks;
+    this.blanks = blanks;
 
-    this.board = [];
-    for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
-    blocks.forEach(block => {
-      this.board[block.ancher.y][block.ancher.x] = block;
+    if (board) {
+      this.board = board;
+    } else {
+      this.board = [];
+      for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
+      blocks.forEach(block => {
+        this.board[block.ancher.y][block.ancher.x] = block;
+      });
+    }
+  }
+
+  clone() {
+    return new Board({
+      blocks: this.blocks.concat(),
+      blanks: this.blanks.concat() as BlanksType,
+      board: this.board.map(x => x.concat()),
     });
   }
 
@@ -92,22 +115,25 @@ class Board {
     );
   }
 
-  getBlock(cell: Cell): Block | null {
-    try {
-      return this.board[cell.y][cell.x];
-    } catch (e) {
-      return null;
-    }
+  getBlock(cell: Cell): Block | undefined {
+    return this.board[cell.y][cell.x];
   }
 
   getBlankIndex(cell: Cell): number {
     return this.blanks.findIndex(x => cell.equals(x));
   }
 
-  moveBlock(move: Move): void {
-    //alias vars
+  moveBlock(move: Move): Board {
+    const new_board = this.clone();
+    new_board._bangMoveBlock(move);
+    return new_board;
+  }
+
+  //make bang changes to member
+  _bangMoveBlock(move: Move): void {
     const ancher = move.ancher;
     const block = this.getBlock(ancher);
+    if (block === undefined) return;
 
     //move blanks
     switch (block.type) {
