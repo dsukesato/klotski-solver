@@ -1,4 +1,7 @@
-import { Cell, Block, Board, Move } from './types';
+import Block from './types/Block';
+import Board from './types/Board';
+import Cell from './types/Cell';
+import Move from './types/Move';
 
 export class Zobrist {
   readonly randoms: number[];

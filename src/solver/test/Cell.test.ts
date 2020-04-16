@@ -1,4 +1,4 @@
-import { Cell } from '../types';
+import Cell from '../types/Cell';
 
 const cellExpectTobe = (cell1: Cell, cell2: Cell): void => {
   expect(cell1.x).toBe(cell2.x);

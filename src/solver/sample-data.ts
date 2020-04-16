@@ -1,4 +1,5 @@
-import { Board, Cell } from './types';
+import Board from './types/Board';
+import Cell from './types/Cell';
 
 export const questions = {
   basic1: new Board({

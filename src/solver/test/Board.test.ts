@@ -1,5 +1,5 @@
 import { questions } from '../sample-data';
-import { Cell } from '../types';
+import Cell from '../types/Cell';
 
 const basic1 = questions.basic1.clone();
 describe('Board', () => {

@@ -1,4 +1,7 @@
-import { Board, Move, Block, Cell } from './type';
+import Block from './types/Block';
+import Board from './types/Board';
+import Cell from './types/Cell';
+import Move from './types/Move';
 
 const isConnectedBlank = (cells: Board['blanks']): boolean =>
   ancher.upper().equals(cells[1]) ||
