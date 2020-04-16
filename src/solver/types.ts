@@ -206,7 +206,12 @@ export class Board {
     block.ancher = dest_ancher;
   }
 
-  forEachBlock(callback: (block: Block) => void) {
-    this.blocks.forEach(callback);
+  forEachBlock(callback: (block: Block, cell: Cell) => void): void {
+    this.board.forEach((array, y) =>
+      array.forEach((block, x) => {
+        if (block === undefined) return;
+        callback(block, new Cell(x, y));
+      })
+    );
   }
 }
