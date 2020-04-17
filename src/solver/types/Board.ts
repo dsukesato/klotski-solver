@@ -38,9 +38,9 @@ export class Board {
 
   clone() {
     return new Board({
-      blocks: this.blocks.concat(),
+      blocks: this.blocks.map((x) => Object.assign({}, x)),
       blanks: this.blanks.concat() as BlanksType,
-      board: this.board.map((x) => x.concat()),
+      board: this.board.map((x) => x.map((x) => Object.assign({}, x))),
     });
   }
 
@@ -144,7 +144,7 @@ export class Board {
     block.ancher = dest_ancher;
   }
 
-  getFlip(): Board {
+  getFlipped(): Board {
     this.forEachBlock((block) => {
       const cell = block.ancher;
 
@@ -201,7 +201,7 @@ export class Board {
   }
 
   forEachBlock(
-    callback: (block: Block, index?: number, self?: Block[]) => void
+    callback: (block: Block, index: number, self: Block[]) => void
   ): void {
     this.blocks.forEach(callback);
   }

@@ -1,13 +1,20 @@
 import { questions } from '../sample-data';
 import Cell from '../types/Cell';
+import Block from '../types/Block';
+import {
+  expectDifferentBoardInstance,
+  expectSameBlock,
+  expectSameBoard,
+} from './utils';
 
 const basic1 = questions.basic1.clone();
+
 describe('Board', () => {
   test('basics', () => {
     expect(basic1.blocks.length).toBe(10);
     expect(basic1.blanks.length).toBe(2);
     expect(
-      basic1.board.reduce((s, x) => [...s, ...x]).filter(x => x !== undefined)
+      basic1.board.reduce((s, x) => [...s, ...x]).filter((x) => x !== undefined)
         .length
     ).toBe(10);
     expect(basic1.board[2][1]?.type).toBe('horizontal');
@@ -17,27 +24,39 @@ describe('Board', () => {
 
   test('clone', () => {
     const cloned = basic1.clone();
-    expect(basic1.getBlock(new Cell(0, 0))).toBe(
+    const expectSameMaybeBlocks = (
+      b1: Block | undefined,
+      b2: Block | undefined
+    ) => {
+      expect(b1).not.toBe(undefined);
+      expect(b2).not.toBe(undefined);
+      if (b1 === undefined || b2 === undefined) return;
+    };
+
+    expectSameMaybeBlocks(
+      basic1.getBlock(new Cell(0, 0)),
       cloned.getBlock(new Cell(0, 0))
     );
-    expect(basic1.getBlock(new Cell(1, 0))).toBe(
+    expectSameMaybeBlocks(
+      basic1.getBlock(new Cell(1, 0)),
       cloned.getBlock(new Cell(1, 0))
     );
-    expect(basic1.getBlock(new Cell(1, 2))).toBe(
+    expectSameMaybeBlocks(
+      basic1.getBlock(new Cell(1, 2)),
       cloned.getBlock(new Cell(1, 2))
     );
-    expect(basic1.getBlock(new Cell(1, 1))).toBe(
-      cloned.getBlock(new Cell(1, 1))
-    );
+    expect(basic1.getBlock(new Cell(1, 1))).toBe(undefined);
+    expect(cloned.getBlock(new Cell(1, 1))).toBe(undefined);
+
     expect(basic1.getBlankIndex(new Cell(1, 4))).toBe(
       cloned.getBlankIndex(new Cell(1, 4))
     );
     expect(basic1.getBlankIndex(new Cell(2, 4))).toBe(
       cloned.getBlankIndex(new Cell(2, 4))
     );
-    expect(basic1.getBlankIndex(new Cell(3, 4))).toBe(
-      cloned.getBlankIndex(new Cell(3, 4))
-    );
+
+    expect(basic1.getBlankIndex(new Cell(3, 4))).toBe(-1);
+    expect(cloned.getBlankIndex(new Cell(3, 4))).toBe(-1);
   });
 
   test('isValidCell', () => {
@@ -63,8 +82,6 @@ describe('Board', () => {
     expect(basic1.getBlankIndex(new Cell(0, 0))).toBe(-1);
     expect(basic1.getBlankIndex(new Cell(3, 4))).toBe(-1);
   });
-
-  test('forEachBlock', () => {});
 
   test('moveBlock1', () => {
     const moved = basic1
@@ -96,27 +113,42 @@ describe('Board', () => {
     expect(moved.getBlankIndex(new Cell(1, 4))).toBe(-1);
   });
 
-  test('immutable', () => {
-    const cloned = basic1.clone();
-    const moved = basic1.moveBlock({
-      ancher: new Cell(1, 3),
-      direction: Cell.DOWN,
+  test('getFlipped', () => {
+    expectSameBoard(questions.easy1.getFlipped(), questions.easy1flipped);
+    expectSameBoard(questions.hard1.getFlipped(), questions.easy1flipped);
+  });
+
+  test('forEachBlock', () => {
+    let blocks: Block[] = [];
+
+    basic1.forEachBlock((block, i, array) => {
+      const block_in_array = array[i];
+      expect(block_in_array).not.toBe(undefined);
+      if (block_in_array === undefined) return;
+
+      expectSameBlock(block, block_in_array);
+
+      const obtained_block = basic1.getBlock(block.ancher);
+
+      expect(obtained_block).not.toBe(undefined);
+      if (obtained_block === undefined) return;
+      expectSameBlock(block, obtained_block);
+
+      blocks.push(block);
     });
 
-    expect(Object.is(basic1, cloned)).not.toBe(true);
-    expect(Object.is(basic1.blocks, cloned.blocks)).not.toBe(true);
-    expect(Object.is(basic1.board, cloned.board)).not.toBe(true);
-    for (const [i, e] of Object.entries(basic1.board)) {
-      expect(Object.is(e, cloned.board[parseInt(i)])).not.toBe(true);
-    }
-    expect(Object.is(basic1.blanks, cloned.blanks)).not.toBe(true);
+    expect(blocks.length).toBe(10);
+  });
 
-    expect(Object.is(basic1, moved)).not.toBe(true);
-    expect(Object.is(basic1.blocks, moved.blocks)).not.toBe(true);
-    expect(Object.is(basic1.board, moved.board)).not.toBe(true);
-    for (const [i, e] of Object.entries(basic1.board)) {
-      expect(Object.is(e, moved.board[parseInt(i)])).not.toBe(true);
-    }
-    expect(Object.is(basic1.blanks, moved.blanks)).not.toBe(true);
+  test('immutable', () => {
+    expectDifferentBoardInstance(basic1, basic1.clone());
+    expectDifferentBoardInstance(
+      basic1,
+      basic1.moveBlock({
+        ancher: new Cell(1, 3),
+        direction: Cell.DOWN,
+      })
+    );
+    expectDifferentBoardInstance(basic1, basic1.getFlipped());
   });
 });
