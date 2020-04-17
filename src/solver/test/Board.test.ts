@@ -5,7 +5,9 @@ import {
   expectDifferentBoardInstance,
   expectSameBlock,
   expectSameBoard,
+  getBlockId,
 } from './utils';
+const zip = require('array-zip');
 
 const basic1 = questions.basic1.clone();
 
@@ -104,6 +106,27 @@ describe('Board', () => {
     expect(moved.getBlankIndex(new Cell(2, 2))).not.toBe(-1);
     expect(moved.getBlankIndex(new Cell(2, 4))).not.toBe(-1);
     expect(moved.getBlankIndex(new Cell(1, 4))).toBe(-1);
+
+    const moved_blocks = moved.blocks.sort(
+      (x, y) => getBlockId(x) - getBlockId(y)
+    );
+    const moved_test_blocks = ([
+      { type: 'dot', ancher: new Cell(1, 4) },
+      { type: 'dot', ancher: new Cell(1, 3) },
+      { type: 'dot', ancher: new Cell(2, 3) },
+      { type: 'dot', ancher: new Cell(3, 4) },
+      { type: 'horizontal', ancher: new Cell(0, 2) },
+      { type: 'vertical', ancher: new Cell(0, 0) },
+      { type: 'vertical', ancher: new Cell(0, 3) },
+      { type: 'vertical', ancher: new Cell(3, 0) },
+      { type: 'vertical', ancher: new Cell(3, 2) },
+      { type: 'target', ancher: new Cell(1, 0) },
+    ] as Block[]).sort((x, y) => getBlockId(x) - getBlockId(y));
+    (zip(moved_blocks, moved_test_blocks) as [Block, Block][]).forEach(
+      ([x, y]) => {
+        expectSameBlock(x, y);
+      }
+    );
   });
 
   test('moveBlock2', () => {
@@ -132,6 +155,27 @@ describe('Board', () => {
     expect(moved.getBlankIndex(new Cell(1, 0))).not.toBe(-1);
     expect(moved.getBlankIndex(new Cell(2, 0))).not.toBe(-1);
     expect(moved.getBlankIndex(new Cell(1, 4))).toBe(-1);
+
+    const moved_blocks = moved.blocks.sort(
+      (x, y) => getBlockId(x) - getBlockId(y)
+    );
+    const moved_test_blocks = ([
+      { type: 'dot', ancher: new Cell(0, 4) },
+      { type: 'dot', ancher: new Cell(1, 4) },
+      { type: 'dot', ancher: new Cell(2, 4) },
+      { type: 'dot', ancher: new Cell(3, 4) },
+      { type: 'horizontal', ancher: new Cell(1, 3) },
+      { type: 'vertical', ancher: new Cell(0, 0) },
+      { type: 'vertical', ancher: new Cell(0, 2) },
+      { type: 'vertical', ancher: new Cell(3, 0) },
+      { type: 'vertical', ancher: new Cell(3, 2) },
+      { type: 'target', ancher: new Cell(1, 1) },
+    ] as Block[]).sort((x, y) => getBlockId(x) - getBlockId(y));
+    (zip(moved_blocks, moved_test_blocks) as [Block, Block][]).forEach(
+      ([x, y]) => {
+        expectSameBlock(x, y);
+      }
+    );
   });
 
   test('getFlipped', () => {

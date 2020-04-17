@@ -31,7 +31,7 @@ describe('Zobrist', () => {
       direction: Cell.RIGHT,
     });
 
-    console.log(b1.getBlock(new Cell(0, 4)));
+    console.log(JSON.stringify(b1, null, 2));
 
     const b1_hash = zobrist.registerBoard(b1);
     expect(zobrist.has(b1_hash)).toBe(true);
