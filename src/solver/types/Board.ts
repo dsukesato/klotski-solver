@@ -30,7 +30,7 @@ export class Board {
     } else {
       this.board = [];
       for (let i = 0; i < Board.HEIGHT; i++) this.board[i] = [];
-      blocks.forEach(block => {
+      blocks.forEach((block) => {
         this.board[block.ancher.y][block.ancher.x] = block;
       });
     }
@@ -40,7 +40,7 @@ export class Board {
     return new Board({
       blocks: this.blocks.concat(),
       blanks: this.blanks.concat() as BlanksType,
-      board: this.board.map(x => x.concat()),
+      board: this.board.map((x) => x.concat()),
     });
   }
 
@@ -58,7 +58,7 @@ export class Board {
   }
 
   getBlankIndex(cell: Cell): number {
-    return this.blanks.findIndex(x => cell.equals(x));
+    return this.blanks.findIndex((x) => cell.equals(x));
   }
 
   moveBlock(move: Move): Board {
@@ -142,6 +142,59 @@ export class Board {
     this.board[ancher.y][ancher.x] = undefined;
     this.board[dest_ancher.y][dest_ancher.x] = block;
     block.ancher = dest_ancher;
+  }
+
+  getFlip(): Board {
+    this.forEachBlock((block, cell) => {
+      if (cell.x === 0) {
+        switch (block.type) {
+          case 'dot' || 'vartical':
+            cell.right(3);
+            break;
+          case 'horizontal' || 'target':
+            cell.right(2);
+            break;
+          default:
+            break;
+        }
+      } else if (cell.x === 1) {
+        switch (block.type) {
+          case 'dot' || 'vartical':
+            cell.right(1);
+            break;
+          case 'horizontal' || 'target':
+            console.log("don't change the ancher");
+            break;
+          default:
+            break;
+        }
+      } else if (cell.x === 2) {
+        switch (block.type) {
+          case 'dot' || 'vartical':
+            cell.left(1);
+            break;
+          case 'horizontal' || 'target':
+            cell.left(2);
+            break;
+          default:
+            break;
+        }
+      } else if (cell.x === 3) {
+        switch (block.type) {
+          case 'dot' || 'vartical':
+            cell.left(3);
+            break;
+          case 'horizontal' || 'target':
+            console.log('warning: getFlip');
+            break;
+          default:
+            break;
+        }
+      } else {
+        console.log('exception');
+      }
+    });
+    return this;
   }
 
   forEachBlock(callback: (block: Block, cell: Cell) => void): void {
