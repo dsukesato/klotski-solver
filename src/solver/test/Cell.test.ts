@@ -1,9 +1,6 @@
 import Cell from '../types/Cell';
+import { expectSameCell } from './utils';
 
-const cellExpectTobe = (cell1: Cell, cell2: Cell): void => {
-  expect(cell1.x).toBe(cell2.x);
-  expect(cell1.y).toBe(cell2.y);
-};
 describe('Cell', () => {
   test('basics', () => {
     const cell = new Cell(1, 2);
@@ -14,21 +11,21 @@ describe('Cell', () => {
   test('methods', () => {
     const cell = new Cell(1, 2);
 
-    cellExpectTobe(cell.add(new Cell(1, 2)), new Cell(2, 4));
+    expectSameCell(cell.add(new Cell(1, 2)), new Cell(2, 4));
 
-    cellExpectTobe(cell.scalar_mul(1.5), new Cell(1.5, 3));
+    expectSameCell(cell.scalar_mul(1.5), new Cell(1.5, 3));
 
-    cellExpectTobe(cell.upper(), new Cell(1, 1));
-    cellExpectTobe(cell.upper(1.5), new Cell(1, 0.5));
+    expectSameCell(cell.upper(), new Cell(1, 1));
+    expectSameCell(cell.upper(1.5), new Cell(1, 0.5));
 
-    cellExpectTobe(cell.downer(), new Cell(1, 3));
-    cellExpectTobe(cell.downer(1.5), new Cell(1, 3.5));
+    expectSameCell(cell.downer(), new Cell(1, 3));
+    expectSameCell(cell.downer(1.5), new Cell(1, 3.5));
 
-    cellExpectTobe(cell.left(), new Cell(0, 2));
-    cellExpectTobe(cell.left(1.5), new Cell(-0.5, 2));
+    expectSameCell(cell.left(), new Cell(0, 2));
+    expectSameCell(cell.left(1.5), new Cell(-0.5, 2));
 
-    cellExpectTobe(cell.right(), new Cell(2, 2));
-    cellExpectTobe(cell.right(1.5), new Cell(2.5, 2));
+    expectSameCell(cell.right(), new Cell(2, 2));
+    expectSameCell(cell.right(1.5), new Cell(2.5, 2));
 
     expect(cell.equals(new Cell(1, 2))).toBe(true);
     expect(cell.equals(new Cell(2, 2))).toBe(false);

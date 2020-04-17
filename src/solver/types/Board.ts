@@ -38,9 +38,9 @@ export class Board {
 
   clone() {
     return new Board({
-      blocks: this.blocks.concat(),
+      blocks: this.blocks.map((x) => Object.assign({}, x)),
       blanks: this.blanks.concat() as BlanksType,
-      board: this.board.map((x) => x.concat()),
+      board: this.board.map((x) => x.map((x) => Object.assign({}, x))),
     });
   }
 
@@ -144,8 +144,10 @@ export class Board {
     block.ancher = dest_ancher;
   }
 
-  getFlip(): Board {
-    this.forEachBlock((block, cell) => {
+  getFlipped(): Board {
+    this.forEachBlock((block) => {
+      const cell = block.ancher;
+
       if (cell.x === 0) {
         switch (block.type) {
           case 'dot' || 'vartical':
@@ -194,16 +196,14 @@ export class Board {
         console.log('exception');
       }
     });
+
     return this;
   }
 
-  forEachBlock(callback: (block: Block, cell: Cell) => void): void {
-    this.board.forEach((array, y) =>
-      array.forEach((block, x) => {
-        if (block === undefined) return;
-        callback(block, new Cell(x, y));
-      })
-    );
+  forEachBlock(
+    callback: (block: Block, index: number, self: Block[]) => void
+  ): void {
+    this.blocks.forEach(callback);
   }
 }
 
