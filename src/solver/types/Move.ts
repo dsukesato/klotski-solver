@@ -1,8 +1,9 @@
 import { Cell } from './Cell';
+import Block from './Block';
 
 type Vector = Cell;
 export type Move = {
-  ancher: Cell;
+  block: Block;
   direction: Vector;
 };
 
