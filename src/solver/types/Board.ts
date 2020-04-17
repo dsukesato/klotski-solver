@@ -69,7 +69,7 @@ export class Board {
 
   //make bang changes to member
   _bangMoveBlock(move: Move): void {
-    const ancher = move.ancher;
+    const ancher = move.block.ancher;
     const block = this.getBlock(ancher);
     if (block === undefined) return;
 

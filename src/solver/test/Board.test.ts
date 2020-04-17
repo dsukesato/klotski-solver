@@ -85,9 +85,18 @@ describe('Board', () => {
 
   test('moveBlock1', () => {
     const moved = basic1
-      .moveBlock({ ancher: new Cell(0, 4), direction: Cell.RIGHT })
-      .moveBlock({ ancher: new Cell(0, 2), direction: Cell.DOWN })
-      .moveBlock({ ancher: new Cell(1, 2), direction: Cell.LEFT });
+      .moveBlock({
+        block: { type: 'dot', ancher: new Cell(0, 4) },
+        direction: Cell.RIGHT,
+      })
+      .moveBlock({
+        block: { type: 'vertical', ancher: new Cell(0, 2) },
+        direction: Cell.DOWN,
+      })
+      .moveBlock({
+        block: { type: 'horizontal', ancher: new Cell(1, 2) },
+        direction: Cell.LEFT,
+      });
 
     expect(moved.getBlock(new Cell(1, 4))?.type).toBe('dot');
     expect(moved.getBlock(new Cell(0, 3))?.type).toBe('vertical');
@@ -99,10 +108,22 @@ describe('Board', () => {
 
   test('moveBlock2', () => {
     const moved = basic1
-      .moveBlock({ ancher: new Cell(1, 3), direction: Cell.DOWN })
-      .moveBlock({ ancher: new Cell(2, 3), direction: Cell.DOWN })
-      .moveBlock({ ancher: new Cell(1, 2), direction: Cell.DOWN })
-      .moveBlock({ ancher: new Cell(1, 0), direction: Cell.DOWN });
+      .moveBlock({
+        block: { type: 'dot', ancher: new Cell(1, 3) },
+        direction: Cell.DOWN,
+      })
+      .moveBlock({
+        block: { type: 'dot', ancher: new Cell(2, 3) },
+        direction: Cell.DOWN,
+      })
+      .moveBlock({
+        block: { type: 'horizontal', ancher: new Cell(1, 2) },
+        direction: Cell.DOWN,
+      })
+      .moveBlock({
+        block: { type: 'target', ancher: new Cell(1, 0) },
+        direction: Cell.DOWN,
+      });
 
     expect(moved.getBlock(new Cell(1, 4))?.type).toBe('dot');
     expect(moved.getBlock(new Cell(2, 4))?.type).toBe('dot');
@@ -145,7 +166,10 @@ describe('Board', () => {
     expectDifferentBoardInstance(
       basic1,
       basic1.moveBlock({
-        ancher: new Cell(1, 3),
+        block: {
+          type: 'dot',
+          ancher: new Cell(1, 3),
+        },
         direction: Cell.DOWN,
       })
     );

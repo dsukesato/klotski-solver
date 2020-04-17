@@ -1,6 +1,5 @@
 import Block from './types/Block';
 import Board from './types/Board';
-import Cell from './types/Cell';
 import Move from './types/Move';
 
 export class Zobrist {
@@ -33,19 +32,15 @@ export class Zobrist {
   // 最初の一回のみ使用する
   registerBoard(board: Board): number {
     let hash = 0;
-    board.forEachBlock(
-      (block) => (hash ^= this.randoms[this.getRandomsIndex(block)])
-    );
+    board.forEachBlock((block) => {
+      hash ^= this.randoms[this.getRandomsIndex(block)];
+    });
     this.hashes.add(hash);
     return hash;
   }
 
-  registerMovedBoard(
-    pre_hash: number,
-    board: Board,
-    move: Move
-  ): number | undefined {
-    const current_block = board.getBlock(move.ancher);
+  registerMovedBoard(pre_hash: number, move: Move): number | undefined {
+    const current_block = move.block;
     if (current_block === undefined) return undefined;
     const moved_block: Block = {
       ...current_block,
