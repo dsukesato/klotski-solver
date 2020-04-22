@@ -1,19 +1,35 @@
 import Cell from '../types/Cell';
 import Block from '../types/Block';
 import Board from '../types/Board';
+import Move from '../types/Move';
 const zip = require('array-zip');
 
 export const getCellId = (cell: Cell): number => Board.WIDTH * cell.y + cell.x;
 export const getBlockId = (block: Block): number => getCellId(block.ancher);
+export const getDirectionId = (vector: Cell): number =>
+  vector.y === -1
+    ? 0
+    : vector.x === 1
+    ? 1
+    : vector.y === 1
+    ? 2
+    : vector.x === -1
+    ? 3
+    : -1;
+export const getMoveId = (move: Move): number =>
+  getCellId(move.block.ancher) * 4 + getDirectionId(move.direction);
 
 export const expectSameCell = (cell1: Cell, cell2: Cell): void => {
   expect(cell1.x).toBe(cell2.x);
   expect(cell1.y).toBe(cell2.y);
 };
-
 export const expectSameBlock = (x: Block, y: Block): void => {
   expect(x.type).toBe(y.type);
   expectSameCell(x.ancher, y.ancher);
+};
+export const expectSameMove = (x: Move, y: Move): void => {
+  expectSameBlock(x.block, y.block);
+  expectSameCell(x.direction, y.direction);
 };
 
 export const expectSameBoard = (b1: Board, b2: Board): void => {
