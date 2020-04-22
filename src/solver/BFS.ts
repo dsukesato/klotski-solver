@@ -11,7 +11,7 @@ export const areConnectedCells = (
   if (cell1.upper().equals(cell2) || cell1.downer().equals(cell2)) {
     return 'vartical';
   } else if (cell1.right().equals(cell2) || cell1.left().equals(cell2)) {
-    return 'vartical';
+    return 'horizontal';
   } else {
     return false;
   }

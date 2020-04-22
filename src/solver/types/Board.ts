@@ -58,7 +58,7 @@ export class Board {
   }
 
   getBlock(cell: Cell): Block | undefined {
-    return this.board[cell.y][cell.x];
+    if (this.isValidCell(cell)) return this.board[cell.y][cell.x];
   }
 
   getBlankIndex(cell: Cell): number {

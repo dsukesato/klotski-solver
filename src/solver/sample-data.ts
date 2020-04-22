@@ -95,6 +95,7 @@ export const questions = {
       { type: 'vertical', ancher: new Cell(0, 2) },
       { type: 'vertical', ancher: new Cell(3, 0) },
       { type: 'vertical', ancher: new Cell(3, 2) },
+      { type: 'vertical', ancher: new Cell(1, 2) },
       { type: 'target', ancher: new Cell(1, 0) },
     ],
     blanks: [new Cell(1, 4), new Cell(2, 4)],
@@ -139,7 +140,7 @@ export const possible_moves: {
   ],
   easy1: [
     {
-      block: { type: 'vertical' as const, ancher: new Cell(0, 3) },
+      block: { type: 'horizontal' as const, ancher: new Cell(0, 3) },
       direction: Cell.DOWN,
     },
     {
