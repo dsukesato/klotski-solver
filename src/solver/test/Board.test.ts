@@ -70,6 +70,16 @@ describe('Board', () => {
     expect(basic1.isValidCell(new Cell(3, 5))).toBe(false);
   });
 
+  test('isSolved', () => {
+    expect(questions.basic1.isSolved()).toBe(false);
+    expect(questions.easy1.isSolved()).toBe(false);
+    expect(questions.easy1flipped.isSolved()).toBe(false);
+    expect(questions.hard1.isSolved()).toBe(false);
+    expect(questions.hard1flipped.isSolved()).toBe(false);
+    expect(questions.impossible1.isSolved()).toBe(false);
+    expect(questions.solved1.isSolved()).toBe(true);
+  });
+
   test('getBlock', () => {
     expect(basic1.getBlock(new Cell(3, 0))?.type).toBe('vertical');
     expect(basic1.getBlock(new Cell(1, 0))?.type).toBe('target');
