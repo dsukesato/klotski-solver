@@ -40,7 +40,6 @@ export class Board {
     return new Board({
       blocks: this.blocks.map((x) => Object.assign({}, x)),
       blanks: this.blanks.concat() as BlanksType,
-      board: this.board.map((x) => x.map((x) => Object.assign({}, x))),
     });
   }
 
@@ -145,59 +144,37 @@ export class Board {
   }
 
   getFlipped(): Board {
-    this.forEachBlock((block) => {
-      const cell = block.ancher;
+    let flipped_blocks: Block[] = this.blocks.map(
+      (block): Block => {
+        if (block.type === 'dot' || block.type === 'vertical')
+          return {
+            type: block.type,
+            ancher: new Cell(3 - block.ancher.x, block.ancher.y),
+          };
 
-      if (cell.x === 0) {
-        switch (block.type) {
-          case 'dot' || 'vartical':
-            cell.right(3);
-            break;
-          case 'horizontal' || 'target':
-            cell.right(2);
-            break;
+        switch (block.ancher.x) {
+          case 0:
+            return {
+              type: block.type,
+              ancher: new Cell(2, block.ancher.y),
+            };
+          case 1:
+            return Object.assign({}, block);
+          case 2:
+            return {
+              type: block.type,
+              ancher: new Cell(0, block.ancher.y),
+            };
           default:
-            break;
+            throw new Error('unexpedted block x coordinate');
         }
-      } else if (cell.x === 1) {
-        switch (block.type) {
-          case 'dot' || 'vartical':
-            cell.right(1);
-            break;
-          case 'horizontal' || 'target':
-            console.log("don't change the ancher");
-            break;
-          default:
-            break;
-        }
-      } else if (cell.x === 2) {
-        switch (block.type) {
-          case 'dot' || 'vartical':
-            cell.left(1);
-            break;
-          case 'horizontal' || 'target':
-            cell.left(2);
-            break;
-          default:
-            break;
-        }
-      } else if (cell.x === 3) {
-        switch (block.type) {
-          case 'dot' || 'vartical':
-            cell.left(3);
-            break;
-          case 'horizontal' || 'target':
-            console.log('warning: getFlip');
-            break;
-          default:
-            break;
-        }
-      } else {
-        console.log('exception');
       }
-    });
+    );
+    let flipped_blanks: BlanksType = this.blanks.map(
+      (blank) => new Cell(3 - blank.x, blank.y)
+    ) as [Cell, Cell];
 
-    return this;
+    return new Board({ blocks: flipped_blocks, blanks: flipped_blanks });
   }
 
   forEachBlock(
