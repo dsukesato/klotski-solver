@@ -18,8 +18,8 @@ export const expectSameBlock = (x: Block, y: Block): void => {
 
 export const expectSameBoard = (b1: Board, b2: Board): void => {
   //board
-  b1.board.forEach((array, x) => {
-    array.forEach((b1_block, y) => {
+  b1.board.forEach((array, y) => {
+    array.forEach((b1_block, x) => {
       expect(b1_block).not.toBe(undefined);
       if (b1_block === undefined) return;
 

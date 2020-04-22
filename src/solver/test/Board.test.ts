@@ -180,7 +180,7 @@ describe('Board', () => {
 
   test('getFlipped', () => {
     expectSameBoard(questions.easy1.getFlipped(), questions.easy1flipped);
-    expectSameBoard(questions.hard1.getFlipped(), questions.easy1flipped);
+    expectSameBoard(questions.hard1.getFlipped(), questions.hard1flipped);
   });
 
   test('forEachBlock', () => {

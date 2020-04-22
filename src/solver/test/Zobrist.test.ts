@@ -31,8 +31,6 @@ describe('Zobrist', () => {
       direction: Cell.RIGHT,
     });
 
-    console.log(JSON.stringify(b1, null, 2));
-
     const b1_hash = zobrist.registerBoard(b1);
     expect(zobrist.has(b1_hash)).toBe(true);
     const b2_hash = zobrist.registerBoard(b2);
