@@ -2,6 +2,7 @@ import Block from './types/Block';
 import Board from './types/Board';
 import Cell from './types/Cell';
 import Move from './types/Move';
+import Zobrist, { Hash } from './Zobrist';
 
 const areConnectedCells = (
   cell1: Cell,
@@ -191,4 +192,53 @@ const calculatePossibleMoves = (board: Board): Move[] => {
     }
   }
   return moves;
+};
+
+type GameState = {
+  board: Board;
+  hash: Hash;
+  move_history: Move[];
+};
+
+export const BFS = (board: Board): Move[] | 'no answer' => {
+  const zobrist = new Zobrist();
+
+  let current_game_states: GameState[] = [
+    {
+      board,
+      hash: zobrist.getHash(board),
+      move_history: [],
+    },
+  ];
+
+  while (current_game_states.length !== 0) {
+    let next_game_states: GameState[] = [];
+
+    for (const game_state of current_game_states) {
+      const next_moves = calculatePossibleMoves(game_state.board);
+      for (const next_move of next_moves) {
+        const next_hash = zobrist.getMovedHash(game_state.hash, next_move);
+        if (next_hash === undefined) throw new Error('unexpected move');
+        // zobrist hash tableにあるか否か
+        if (!zobrist.has(next_hash)) {
+          zobrist.add(next_hash);
+          zobrist.add(zobrist.getHash(game_state.board.getFlipped()));
+
+          const next_state: GameState = {
+            board: game_state.board.moveBlock(next_move),
+            hash: next_hash,
+            // game_state.move_historyを展開し、next_moveを加えて配列を作り直している
+            move_history: [...game_state.move_history, next_move],
+          };
+
+          if (next_state.board.isSolved()) return next_state.move_history;
+
+          next_game_states.push(next_state);
+        }
+      }
+    }
+
+    current_game_states = next_game_states;
+  }
+  return 'no answer';
 };

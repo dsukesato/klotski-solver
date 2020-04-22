@@ -2,9 +2,11 @@ import Block from './types/Block';
 import Board from './types/Board';
 import Move from './types/Move';
 
+export type Hash = number;
+
 export class Zobrist {
   readonly randoms: number[];
-  readonly hashes: Set<number>;
+  readonly hashes: Set<Hash>;
 
   constructor() {
     // init random_table
@@ -30,16 +32,15 @@ export class Zobrist {
 
   // boardのデータを引数として受け取り、そのデータを表すハッシュ値を返すメソッド
   // 最初の一回のみ使用する
-  registerBoard(board: Board): number {
+  getHash(board: Board): Hash {
     let hash = 0;
     board.forEachBlock((block) => {
       hash ^= this.randoms[this.getRandomsIndex(block)];
     });
-    this.hashes.add(hash);
     return hash;
   }
 
-  registerMovedBoard(pre_hash: number, move: Move): number | undefined {
+  getMovedHash(pre_hash: Hash, move: Move): Hash | undefined {
     const current_block = move.block;
     if (current_block === undefined) return undefined;
     const moved_block: Block = {
@@ -51,11 +52,14 @@ export class Zobrist {
       this.randoms[this.getRandomsIndex(current_block)] ^
       this.randoms[this.getRandomsIndex(moved_block)];
 
-    this.hashes.add(hash);
     return hash;
   }
 
-  has(hash: number): boolean {
+  add(hash: Hash): void {
+    this.hashes.add(hash);
+  }
+
+  has(hash: Hash): boolean {
     return this.hashes.has(hash);
   }
 }
