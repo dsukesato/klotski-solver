@@ -40,7 +40,6 @@ export class Board {
     return new Board({
       blocks: this.blocks.map((x) => Object.assign({}, x)),
       blanks: this.blanks.concat() as BlanksType,
-      board: this.board.map((x) => x.map((x) => Object.assign({}, x))),
     });
   }
 
