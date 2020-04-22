@@ -3,7 +3,7 @@ import Board from './types/Board';
 import Cell from './types/Cell';
 import Move from './types/Move';
 
-const areConnectedCells = (
+export const areConnectedCells = (
   cell1: Cell,
   cell2: Cell
 ): 'horizontal' | 'vartical' | false => {
@@ -16,7 +16,7 @@ const areConnectedCells = (
   }
 };
 
-const calculatePossibleMoves = (board: Board): Move[] => {
+export const calculatePossibleMoves = (board: Board): Move[] => {
   let moves: Move[] = [];
   const connectedCells = areConnectedCells(board.blanks[0], board.blanks[1]);
   let blank1 = board.blanks[0],
