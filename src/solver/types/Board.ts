@@ -52,6 +52,11 @@ export class Board {
     );
   }
 
+  isSolved(): boolean {
+    const block = this.getBlock(new Cell(1, 3));
+    return block !== undefined && block.type === 'target';
+  }
+
   getBlock(cell: Cell): Block | undefined {
     return this.board[cell.y][cell.x];
   }
