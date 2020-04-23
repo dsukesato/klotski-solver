@@ -20,9 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test:typecheck": "tsc --noEmit",
-    "test:jest": "CI=true react-scripts test",
+    "test:jest": "react-scripts test --coverage --watchAll=false",
     "test": "run-p test:*",
-    "test-watch": "react-scripts test"
+    "test-watch": "react-scripts test --coverage --watchAll"
   },
   "eslintConfig": {
     "extends": "react-app"
