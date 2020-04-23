@@ -52,6 +52,21 @@ export const questions = {
     ],
     blanks: [new Cell(2, 4), new Cell(3, 4)],
   }),
+  easy2: new Board({
+    blocks: [
+      { type: 'dot', ancher: new Cell(0, 0) },
+      { type: 'dot', ancher: new Cell(1, 0) },
+      { type: 'dot', ancher: new Cell(2, 4) },
+      { type: 'dot', ancher: new Cell(3, 4) },
+      { type: 'horizontal', ancher: new Cell(0, 1) },
+      { type: 'horizontal', ancher: new Cell(0, 3) },
+      { type: 'horizontal', ancher: new Cell(0, 4) },
+      { type: 'horizontal', ancher: new Cell(0, 2) },
+      { type: 'horizontal', ancher: new Cell(2, 3) },
+      { type: 'target', ancher: new Cell(2, 1) },
+    ],
+    blanks: [new Cell(2, 0), new Cell(3, 0)],
+  }),
   //峰回路转 140moves
   hard1: new Board({
     blocks: [
@@ -118,7 +133,7 @@ export const questions = {
 };
 
 export const possible_moves: {
-  [key in 'basic1' | 'easy1' | 'hard1' | 'impossible1']: Move[];
+  [key in 'basic1' | 'easy1' | 'easy2' | 'hard1' | 'impossible1']: Move[];
 } = {
   basic1: [
     {
@@ -146,6 +161,16 @@ export const possible_moves: {
     {
       block: { type: 'dot' as const, ancher: new Cell(2, 4) },
       direction: Cell.LEFT,
+    },
+  ],
+  easy2: [
+    {
+      block: { type: 'dot' as const, ancher: new Cell(1, 0) },
+      direction: Cell.RIGHT,
+    },
+    {
+      block: { type: 'target' as const, ancher: new Cell(2, 1) },
+      direction: Cell.UP,
     },
   ],
   hard1: [
