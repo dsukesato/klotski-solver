@@ -74,7 +74,7 @@ export const calculatePossibleMoves = (board: Board): Move[] => {
         (block !== undefined && block.type === 'vertical') ||
         (block !== undefined && block.type === 'target')
       )
-        moves.push({ block, direction: Cell.RIGHT });
+        moves.push({ block, direction: Cell.UP });
       // 6
       block = board.getBlock(blank2.upper(2));
       if (block !== undefined && block.type === 'vertical')
@@ -210,6 +210,10 @@ export const BFS = (board: Board): Move[] | 'no answer' => {
       move_history: [],
     },
   ];
+  if (board.isSolved()) return current_game_states[0].move_history;
+
+  zobrist.add(current_game_states[0].hash);
+  zobrist.add(zobrist.getHash(board.getFlipped()));
 
   while (current_game_states.length !== 0) {
     let next_game_states: GameState[] = [];
@@ -222,10 +226,11 @@ export const BFS = (board: Board): Move[] | 'no answer' => {
         // zobrist hash tableにあるか否か
         if (!zobrist.has(next_hash)) {
           zobrist.add(next_hash);
-          zobrist.add(zobrist.getHash(game_state.board.getFlipped()));
+          const moved_board = game_state.board.moveBlock(next_move);
+          zobrist.add(zobrist.getHash(moved_board.getFlipped()));
 
           const next_state: GameState = {
-            board: game_state.board.moveBlock(next_move),
+            board: moved_board,
             hash: next_hash,
             // game_state.move_historyを展開し、next_moveを加えて配列を作り直している
             move_history: [...game_state.move_history, next_move],
