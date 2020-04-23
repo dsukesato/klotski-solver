@@ -36,6 +36,17 @@ export class Cell {
   left(num = 1): Cell {
     return this.add(Cell.LEFT.scalar_mul(num));
   }
+
+  toString(): string {
+    return `{x: ${this.x}, y: ${this.y}}`;
+  }
+  toDirectionString(): string {
+    if (this.x === 1) return 'RIGHT';
+    if (this.x === -1) return 'LEFT';
+    if (this.y === 1) return 'DOWN';
+    if (this.y === -1) return 'UP';
+    return '';
+  }
 }
 
 export default Cell;

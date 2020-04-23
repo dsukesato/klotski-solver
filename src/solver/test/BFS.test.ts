@@ -66,27 +66,7 @@ describe('BFS', () => {
       const answer = BFS(question);
       expect(answer).toBeInstanceOf(Array);
       if (!(answer instanceof Array)) return;
-
       expect(answer.length).not.toBe(0);
-      const cell_to_string = (x: any) => `{x: ${x.x}, y: ${x.y}}`;
-      const directionToString = (direction: Cell): String => {
-        if (direction.x === 1) return 'RIGHT';
-        if (direction.x === -1) return 'LEFT';
-        if (direction.y === 1) return 'DOWN';
-        if (direction.y === -1) return 'UP';
-        return '';
-      };
-      console.log(
-        answer.length,
-        answer
-          .map(
-            (x) =>
-              `[${x.block.type}] ${cell_to_string(
-                x.block.ancher
-              )} ${directionToString(x.direction)}`
-          )
-          .reduce((s, x) => `${s}\n${x}`)
-      );
 
       let moved_board: Board = question;
       for (const move of answer) {
@@ -107,8 +87,6 @@ describe('BFS', () => {
     const solved_moves = BFS(questions.solved1);
     expect(solved_moves).toBeInstanceOf(Array);
     if (!(solved_moves instanceof Array)) return;
-    console.log(solved_moves);
-
     expect(solved_moves.length).toBe(0);
   });
 });
