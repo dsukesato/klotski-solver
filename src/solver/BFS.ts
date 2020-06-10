@@ -247,3 +247,5 @@ export const BFS = (board: Board): Move[] | 'no answer' => {
   }
   return 'no answer';
 };
+
+export default BFS;
