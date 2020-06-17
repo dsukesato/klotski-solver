@@ -24,7 +24,7 @@ const BoardInput: FC<{ onBoardInput: (board: Board) => void }> = ({
           setSelectedType(type);
         }, [])}
       />
-      <BoardView board={board} />
+      <BoardView onClick={() => console.log('hoge')} board={board} />
     </div>
   );
 };

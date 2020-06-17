@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import Board from '../../solver/types/Board';
 import Move from '../../solver/types/Move';
 import Block from '../../solver/types/Block';
@@ -11,10 +11,9 @@ const BoardView: FC<{
   board: Board;
   translucent_blocks?: Block[];
   ghost_move?: Move;
-  onCellClick?: (cell: Cell) => void;
-  onCellEnter?: (cell: Cell) => void;
-  onCellLeave?: (cell: Cell) => void;
-}> = ({ board, translucent_blocks, ghost_move }) => {
+  onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onCellMouseMove?: (cell: Cell) => void;
+}> = ({ board, translucent_blocks, ghost_move, onClick, onCellMouseMove }) => {
   const getBlockKey = (block: Block): string => block.type + block.ancher;
   const blocks = board.blocks.map((x) => (
     <BlockView block={x} key={getBlockKey(x)} />
@@ -42,8 +41,27 @@ const BoardView: FC<{
     }
   `;
 
+  const on_mouse_move = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const current_target_rect = e.currentTarget.getBoundingClientRect();
+    const mouse_pos = {
+      x: e.clientX - current_target_rect.x,
+      y: e.clientY - current_target_rect.y,
+    };
+    const cell_x = Math.floor(
+      (mouse_pos.x - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
+    );
+    const cell_y = Math.floor(
+      (mouse_pos.y - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
+    );
+    const cell = new Cell(
+      cell_x < 0 ? 0 : cell_x > Board.WIDTH ? Board.WIDTH : cell_x,
+      cell_y < 0 ? 0 : cell_y > Board.HEIGHT ? Board.HEIGHT : cell_y
+    );
+    if (onCellMouseMove !== undefined) onCellMouseMove(cell);
+  };
+
   return (
-    <StyledBoard>
+    <StyledBoard onClick={onClick} onMouseMove={useCallback(on_mouse_move, [])}>
       {blocks}
       {translucent_blocks
         ? translucent_blocks.map((x) => (
