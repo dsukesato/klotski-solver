@@ -64,7 +64,12 @@ export const BlockTypeButtons: FC<{
 }> = ({ type, onTypeSelect }) => {
   const block_types: BlockType[] = ['dot', 'horizontal', 'vertical', 'target'];
   const buttons = block_types.map((x) => (
-    <BlockTypeButton type={x} is_active={type === x} onClick={onTypeSelect} />
+    <BlockTypeButton
+      type={x}
+      is_active={type === x}
+      onClick={onTypeSelect}
+      key={x}
+    />
   ));
 
   return (

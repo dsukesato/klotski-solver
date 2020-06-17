@@ -46,6 +46,8 @@ const BlockView: FC<{
     box-shadow: 0 3px 5px #0002, 0 1px 5px #0002;
     border-radius: 3px;
     opacity: ${is_translucent ? 0.5 : 1};
+    cursor: none;
+    pointer-events: none;
     ${move_animation
       ? css`
           animation: ${getMoveKeyFlame(move_animation)} 1s ease infinite;

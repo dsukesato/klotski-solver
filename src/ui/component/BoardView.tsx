@@ -11,9 +11,15 @@ const BoardView: FC<{
   board: Board;
   translucent_blocks?: Block[];
   ghost_move?: Move;
-  onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  onMouseUp?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   onCellMouseMove?: (cell: Cell) => void;
-}> = ({ board, translucent_blocks, ghost_move, onClick, onCellMouseMove }) => {
+}> = ({
+  board,
+  translucent_blocks,
+  ghost_move,
+  onMouseUp,
+  onCellMouseMove,
+}) => {
   const getBlockKey = (block: Block): string => block.type + block.ancher;
   const blocks = board.blocks.map((x) => (
     <BlockView block={x} key={getBlockKey(x)} />
@@ -27,7 +33,6 @@ const BoardView: FC<{
     position: relative;
     width: ${width_px}px;
     height: ${height_px}px;
-    margin-top: 20px;
     border: solid 3px #aaa;
     &::after {
       content: '';
@@ -41,27 +46,32 @@ const BoardView: FC<{
     }
   `;
 
-  const on_mouse_move = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    const current_target_rect = e.currentTarget.getBoundingClientRect();
-    const mouse_pos = {
-      x: e.clientX - current_target_rect.x,
-      y: e.clientY - current_target_rect.y,
-    };
-    const cell_x = Math.floor(
-      (mouse_pos.x - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
-    );
-    const cell_y = Math.floor(
-      (mouse_pos.y - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
-    );
-    const cell = new Cell(
-      cell_x < 0 ? 0 : cell_x > Board.WIDTH ? Board.WIDTH : cell_x,
-      cell_y < 0 ? 0 : cell_y > Board.HEIGHT ? Board.HEIGHT : cell_y
-    );
-    if (onCellMouseMove !== undefined) onCellMouseMove(cell);
-  };
+  const on_mouse_move = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      if (!e.currentTarget.getBoundingClientRect) return;
+
+      const current_target_rect = e.currentTarget.getBoundingClientRect();
+      const mouse_pos = {
+        x: e.clientX - current_target_rect.x,
+        y: e.clientY - current_target_rect.y,
+      };
+      const cell_x = Math.floor(
+        (mouse_pos.x - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
+      );
+      const cell_y = Math.floor(
+        (mouse_pos.y - BLOCK_MARGIN_PX / 2) / (BLOCK_MARGIN_PX + CELL_SIZE_PX)
+      );
+      const cell = new Cell(
+        cell_x < 0 ? 0 : cell_x > Board.WIDTH - 1 ? Board.WIDTH - 1 : cell_x,
+        cell_y < 0 ? 0 : cell_y > Board.HEIGHT - 1 ? Board.HEIGHT - 1 : cell_y
+      );
+      if (onCellMouseMove !== undefined) onCellMouseMove(cell);
+    },
+    []
+  );
 
   return (
-    <StyledBoard onClick={onClick} onMouseMove={useCallback(on_mouse_move, [])}>
+    <StyledBoard onMouseUp={onMouseUp} onMouseMove={on_mouse_move}>
       {blocks}
       {translucent_blocks
         ? translucent_blocks.map((x) => (

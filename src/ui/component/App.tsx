@@ -27,17 +27,6 @@ const App: FC<{}> = () => {
       {bfs_result ? (
         <Answer board={bfs_result.board} moves={bfs_result.moves} />
       ) : null}
-
-      <BoardView
-        board={questions.basic1}
-        translucent_blocks={[{ type: 'horizontal', ancher: new Cell(1, 4) }]}
-        ghost_move={{
-          block: questions.basic1.blocks[5],
-          direction: new Cell(1, 0),
-        }}
-      />
-      <BoardView board={questions.easy1} />
-      <BoardView board={questions.hard1} />
     </div>
   );
 };
