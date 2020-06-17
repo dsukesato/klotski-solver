@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import Board from '../../solver/types/Board';
 import BlockTypeButtons from './BlockTypeButtons';
 import Block from '../../solver/types/Block';
@@ -20,9 +20,9 @@ const BoardInput: FC<{ onBoardInput: (board: Board) => void }> = ({
     <div className="board_input">
       <BlockTypeButtons
         type={selected_type}
-        onTypeSelect={(type) => {
+        onTypeSelect={useCallback((type) => {
           setSelectedType(type);
-        }}
+        }, [])}
       />
       <BoardView board={board} />
     </div>

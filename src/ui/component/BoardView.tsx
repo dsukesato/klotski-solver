@@ -5,6 +5,7 @@ import Block from '../../solver/types/Block';
 import Cell from '../../solver/types/Cell';
 import styled from '@emotion/styled';
 import BlockView from './BlockView';
+import { CELL_SIZE_PX, BLOCK_MARGIN_PX } from '../style-const';
 
 const BoardView: FC<{
   board: Board;
@@ -18,9 +19,6 @@ const BoardView: FC<{
   const blocks = board.blocks.map((x) => (
     <BlockView block={x} key={getBlockKey(x)} />
   ));
-
-  const CELL_SIZE_PX = 50;
-  const BLOCK_MARGIN_PX = 10;
 
   const width_px =
     BLOCK_MARGIN_PX + (CELL_SIZE_PX + BLOCK_MARGIN_PX) * Board.WIDTH;
