@@ -5,6 +5,7 @@ import {
   expectDifferentBoardInstance,
   expectSameBlock,
   expectSameBoard,
+  expectSameBlanks,
   getBlockId,
 } from './utils';
 const zip = require('array-zip');
@@ -191,6 +192,25 @@ describe('Board', () => {
   test('getFlipped', () => {
     expectSameBoard(questions.easy1.getFlipped(), questions.easy1flipped);
     expectSameBoard(questions.hard1.getFlipped(), questions.hard1flipped);
+  });
+
+  test('calculateBlankCells', () => {
+    expectSameBlanks(
+      questions.basic1.calculateBlankCells(),
+      questions.basic1.blanks
+    );
+    expectSameBlanks(
+      questions.easy1.calculateBlankCells(),
+      questions.easy1.blanks
+    );
+    expectSameBlanks(
+      questions.hard1.calculateBlankCells(),
+      questions.hard1.blanks
+    );
+    expectSameBlanks(
+      questions.impossible1.calculateBlankCells(),
+      questions.impossible1.blanks
+    );
   });
 
   test('forEachBlock', () => {

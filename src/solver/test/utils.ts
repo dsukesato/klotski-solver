@@ -32,6 +32,17 @@ export const expectSameMove = (x: Move, y: Move): void => {
   expectSameCell(x.direction, y.direction);
 };
 
+export const expectSameBlanks = (b1: Cell[], b2: Cell[]): void => {
+  expect(b1.length).toBe(b2.length);
+  const sorted_b1_blanks = b1.sort((x, y) => getCellId(x) - getCellId(y));
+  const sorted_b2_blanks = b2.sort((x, y) => getCellId(x) - getCellId(y));
+  (zip(sorted_b1_blanks, sorted_b2_blanks) as [Cell, Cell][]).forEach(
+    ([x, y]) => {
+      expectSameCell(x, y);
+    }
+  );
+};
+
 export const expectSameBoard = (b1: Board, b2: Board): void => {
   //board
   b1.board.forEach((array, y) => {
@@ -61,17 +72,7 @@ export const expectSameBoard = (b1: Board, b2: Board): void => {
   );
 
   //blanks
-  const sorted_b1_blanks = b1.blanks.sort(
-    (x, y) => getCellId(x) - getCellId(y)
-  );
-  const sorted_b2_blanks = b2.blanks.sort(
-    (x, y) => getCellId(x) - getCellId(y)
-  );
-  (zip(sorted_b1_blanks, sorted_b2_blanks) as [Cell, Cell][]).forEach(
-    ([x, y]) => {
-      expectSameCell(x, y);
-    }
-  );
+  expectSameBlanks(b1.blanks, b2.blanks);
 };
 
 export const expectDifferentBoardInstance = (b1: Board, b2: Board): void => {

@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import Block from '../../solver/types/Block';
 import styled from '@emotion/styled';
 
+import { CELL_SIZE_PX, BLOCK_COLORS, BLOCK_MARGIN_PX } from '../style-const';
+
 import { keyframes, css } from '@emotion/core';
 import Cell from '../../solver/types/Cell';
 
@@ -17,14 +19,6 @@ const getMoveKeyFlame = (direction: Cell) => keyframes`
   }
 `;
 
-const CELL_SIZE_PX = 50;
-const BLOCK_MARGIN_PX = 10;
-const BLOCK_COLORS: { [key in Block['type']]: string } = {
-  dot: '#35d0ba',
-  vertical: '#ffcd3c',
-  horizontal: '#ff9234',
-  target: '#d92027',
-};
 const BlockView: FC<{
   block: Block;
   is_translucent?: boolean;
@@ -52,6 +46,8 @@ const BlockView: FC<{
     box-shadow: 0 3px 5px #0002, 0 1px 5px #0002;
     border-radius: 3px;
     opacity: ${is_translucent ? 0.5 : 1};
+    cursor: none;
+    pointer-events: none;
     ${move_animation
       ? css`
           animation: ${getMoveKeyFlame(move_animation)} 1s ease infinite;

@@ -182,6 +182,46 @@ export class Board {
     return new Board({ blocks: flipped_blocks, blanks: flipped_blanks });
   }
 
+  calculateBlankCells(): Cell[] {
+    const blanks: Set<string> = new Set(
+      [...Array(Board.WIDTH).keys()]
+        .map((x) => [...Array(Board.HEIGHT).keys()].map((y) => `${x},${y}`))
+        .reduce((s, x) => [...s, ...x])
+    );
+
+    const deleteBlank = (cell: Cell): void => {
+      blanks.delete(`${cell.x},${cell.y}`);
+    };
+
+    this.blocks.forEach((block) => {
+      const ancher: Cell = block.ancher;
+      switch (block.type) {
+        case 'dot':
+          deleteBlank(ancher);
+          break;
+        case 'horizontal':
+          deleteBlank(ancher);
+          deleteBlank(ancher.right());
+          break;
+        case 'vertical':
+          deleteBlank(ancher);
+          deleteBlank(ancher.downer());
+          break;
+        case 'target':
+          deleteBlank(ancher);
+          deleteBlank(ancher.right());
+          deleteBlank(ancher.downer());
+          deleteBlank(ancher.right().downer());
+          break;
+      }
+    });
+
+    return Array.from(blanks.values()).map((cell) => {
+      const cells = cell.split(',');
+      return new Cell(parseInt(cells[0]), parseInt(cells[1]));
+    });
+  }
+
   forEachBlock(
     callback: (block: Block, index: number, self: Block[]) => void
   ): void {
