@@ -5,14 +5,15 @@ import Board from '../../solver/types/Board';
 import Move from '../../solver/types/Move';
 import BFS from '../../solver/BFS';
 import { questions } from '../../solver/sample-data';
-import BoardView from './BoardView';
-import Cell from '../../solver/types/Cell';
 
 const App: FC<{}> = () => {
   const [bfs_result, setBFSResult] = useState<{
     board: Board;
     moves: Move[];
-  } | null>(null);
+  } | null>({
+    board: questions.basic1,
+    moves: BFS(questions.basic1) as Move[],
+  });
 
   return (
     <div className="App">

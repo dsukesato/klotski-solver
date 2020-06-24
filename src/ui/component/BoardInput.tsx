@@ -42,8 +42,6 @@ const BoardInput: FC<{
         />
         <BoardView
           onMouseUp={() => {
-            console.log(hovered_cell);
-
             setBoard(
               new Board({
                 blocks: [
@@ -59,7 +57,20 @@ const BoardInput: FC<{
           translucent_blocks={[{ type: selected_type, ancher: hovered_cell }]}
         />
       </InputView>
-      <SubmitButton variant="contained">solve!</SubmitButton>
+      <SubmitButton
+        disabled={board.calculateBlankCells().length !== 2}
+        variant="contained"
+        onClick={() =>
+          onBoardInput(
+            new Board({
+              blocks: board.blocks,
+              blanks: board.calculateBlankCells() as [Cell, Cell],
+            })
+          )
+        }
+      >
+        solve!
+      </SubmitButton>
     </div>
   );
 };
