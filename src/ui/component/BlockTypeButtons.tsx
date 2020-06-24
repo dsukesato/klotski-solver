@@ -51,7 +51,7 @@ const BlockTypeButton: FC<{
   return (
     <StyledButton
       variant="outlined"
-      onClick={useCallback(() => onClick(type), [type])}
+      onClick={useCallback(() => onClick(type), [onClick, type])}
     >
       <BlockIcon type={type} />
     </StyledButton>

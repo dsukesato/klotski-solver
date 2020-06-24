@@ -69,7 +69,7 @@ const BoardView: FC<{
       );
       if (onCellMouseMove !== undefined) onCellMouseMove(cell);
     },
-    []
+    [onCellMouseMove]
   );
 
   return (
