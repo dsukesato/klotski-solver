@@ -11,12 +11,14 @@ const BoardView: FC<{
   board: Board;
   translucent_blocks?: Block[];
   ghost_move?: Move;
+  className?: string;
   onMouseUp?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   onCellMouseMove?: (cell: Cell) => void;
 }> = ({
   board,
   translucent_blocks,
   ghost_move,
+  className,
   onMouseUp,
   onCellMouseMove,
 }) => {
@@ -71,7 +73,11 @@ const BoardView: FC<{
   );
 
   return (
-    <StyledBoard onMouseUp={onMouseUp} onMouseMove={on_mouse_move}>
+    <StyledBoard
+      className={className ? className : ''}
+      onMouseUp={onMouseUp}
+      onMouseMove={on_mouse_move}
+    >
       {blocks}
       {translucent_blocks
         ? translucent_blocks.map((x) => (
