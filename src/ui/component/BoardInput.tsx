@@ -60,14 +60,14 @@ const BoardInput: FC<{
       <SubmitButton
         disabled={board.calculateBlankCells().length !== 2}
         variant="contained"
-        onClick={() =>
+        onClick={() => {
           onBoardInput(
             new Board({
               blocks: board.blocks,
               blanks: board.calculateBlankCells() as [Cell, Cell],
             })
-          )
-        }
+          );
+        }}
       >
         solve!
       </SubmitButton>
