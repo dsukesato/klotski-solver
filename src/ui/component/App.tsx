@@ -4,9 +4,6 @@ import Answer from './Answer';
 import Board from '../../solver/types/Board';
 import Move from '../../solver/types/Move';
 import BFS from '../../solver/BFS';
-import { questions } from '../../solver/sample-data';
-import BoardView from './BoardView';
-import Cell from '../../solver/types/Cell';
 
 const App: FC<{}> = () => {
   const [bfs_result, setBFSResult] = useState<{
