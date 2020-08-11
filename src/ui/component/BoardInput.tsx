@@ -31,6 +31,42 @@ const BoardInput: FC<{
     margin: 20px auto 0 !important;
   `;
 
+  const suppression_control = useCallback(
+    (block: Block): Block => {
+      let fix_cell: Cell = block.ancher;
+      if (block.ancher.x === Board.WIDTH - 1 && block.ancher.y === Board.HEIGHT - 1) {
+        switch (block.type) {
+          case 'vertical':
+            fix_cell = fix_cell.upper();
+            break;
+          case 'horizontal':
+            fix_cell = fix_cell.left();
+            break;
+          case 'target':
+            fix_cell = fix_cell.left();
+            fix_cell = fix_cell.upper();
+            break;
+        }
+      }
+      else if (block.ancher.x === Board.WIDTH - 1) {
+        if (block.type === 'horizontal' || block.type === 'target') {
+          fix_cell = fix_cell.left();
+        }
+      }
+      else if (block.ancher.y === Board.HEIGHT - 1) {
+        if (block.type === 'vertical' || block.type === 'target') {
+          fix_cell = fix_cell.upper();
+        }
+      }
+      const new_block: Block = {
+        type: block.type,
+        ancher: fix_cell
+      }
+      return new_block;
+    },
+    []
+  );
+
   return (
     <div className={`board_input ${className}`}>
       <InputView>
@@ -46,7 +82,7 @@ const BoardInput: FC<{
               new Board({
                 blocks: [
                   ...board.blocks,
-                  { type: selected_type, ancher: hovered_cell },
+                  suppression_control({ type: selected_type, ancher: hovered_cell }),
                 ],
                 blanks: board.blanks,
               })
@@ -54,7 +90,7 @@ const BoardInput: FC<{
           }}
           onCellMouseMove={useCallback(throttle(100, setHoveredCell), [])}
           board={board}
-          translucent_blocks={[{ type: selected_type, ancher: hovered_cell }]}
+          translucent_blocks={[suppression_control({ type: selected_type, ancher: hovered_cell })]}
         />
       </InputView>
       <SubmitButton
