@@ -227,27 +227,25 @@ export class Board {
     const cells: Cell[] = this.calculateBlankCells();
     switch (block.type) {
       case 'dot':
-        cells.map(blank => {
-          console.log(blank, block.ancher);
-
+        cells.forEach(blank => {
           if (blank.x === block.ancher.x && blank.y === block.ancher.y) {
             isDuplicate = true;
           }
         });
         break;
       case 'horizontal':
-        cells.map(blank1 => {
+        cells.forEach(blank1 => {
           if (blank1.x === block.ancher.x && blank1.y === block.ancher.y) {
-            cells.map(blank2 => {
+            cells.forEach(blank2 => {
               if (blank2.x === block.ancher.right().x && blank2.y === block.ancher.right().y) isDuplicate = true;
             })
           }
         })
         break;
       case 'vertical':
-        cells.map(blank1 => {
+        cells.forEach(blank1 => {
           if (blank1.x === block.ancher.x && blank1.y === block.ancher.y) {
-            cells.map(blank2 => {
+            cells.forEach(blank2 => {
               if (blank2.x === block.ancher.downer().x && blank2.y === block.ancher.downer().y) isDuplicate = true;
             })
           }
@@ -255,7 +253,7 @@ export class Board {
         break;
       case 'target':
         let count: number = 0;
-        cells.map(blank => {
+        cells.forEach(blank => {
           if (blank.x === block.ancher.x && blank.y === block.ancher.y) count++;
           if (blank.x === block.ancher.downer().x && blank.y === block.ancher.downer().y) count++;
           if (blank.x === block.ancher.right().x && blank.y === block.ancher.right().y) count++;
