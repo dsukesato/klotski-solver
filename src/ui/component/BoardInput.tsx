@@ -78,15 +78,20 @@ const BoardInput: FC<{
         />
         <BoardView
           onMouseUp={() => {
-            setBoard(
-              new Board({
-                blocks: [
-                  ...board.blocks,
-                  suppression_control({ type: selected_type, ancher: hovered_cell }),
-                ],
-                blanks: board.blanks,
-              })
-            );
+            if (board.duplicateSuppression(suppression_control({ type: selected_type, ancher: hovered_cell }))) {
+              setBoard(
+                new Board({
+                  blocks: [
+                    ...board.blocks,
+                    suppression_control({ type: selected_type, ancher: hovered_cell }),
+                  ],
+                  blanks: board.blanks,
+                })
+              );
+            }
+            else {
+              console.log('Duplicated block');
+            }
           }}
           onCellMouseMove={useCallback(throttle(100, setHoveredCell), [])}
           board={board}

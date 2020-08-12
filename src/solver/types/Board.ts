@@ -222,6 +222,51 @@ export class Board {
     });
   }
 
+  duplicateSuppression(block: Block): boolean {
+    let isDuplicate: boolean = false;
+    const cells: Cell[] = this.calculateBlankCells();
+    switch (block.type) {
+      case 'dot':
+        cells.map(blank => {
+          console.log(blank, block.ancher);
+
+          if (blank.x === block.ancher.x && blank.y === block.ancher.y) {
+            isDuplicate = true;
+          }
+        });
+        break;
+      case 'horizontal':
+        cells.map(blank1 => {
+          if (blank1.x === block.ancher.x && blank1.y === block.ancher.y) {
+            cells.map(blank2 => {
+              if (blank2.x === block.ancher.right().x && blank2.y === block.ancher.right().y) isDuplicate = true;
+            })
+          }
+        })
+        break;
+      case 'vertical':
+        cells.map(blank1 => {
+          if (blank1.x === block.ancher.x && blank1.y === block.ancher.y) {
+            cells.map(blank2 => {
+              if (blank2.x === block.ancher.downer().x && blank2.y === block.ancher.downer().y) isDuplicate = true;
+            })
+          }
+        })
+        break;
+      case 'target':
+        let count: number = 0;
+        cells.map(blank => {
+          if (blank.x === block.ancher.x && blank.y === block.ancher.y) count++;
+          if (blank.x === block.ancher.downer().x && blank.y === block.ancher.downer().y) count++;
+          if (blank.x === block.ancher.right().x && blank.y === block.ancher.right().y) count++;
+          if (blank.x === block.ancher.downer().right().x && blank.y === block.ancher.downer().right().y) count++;
+          if (count === 4) isDuplicate = true;
+        })
+        break;
+    }
+    return isDuplicate;
+  }
+
   forEachBlock(
     callback: (block: Block, index: number, self: Block[]) => void
   ): void {
